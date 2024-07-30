@@ -3,7 +3,7 @@ import { Expense } from "../types/Expense";
 
 interface ExpensesContextProps {
     expenses: Array<Expense>;
-    addExpense: (expense: Expense) => void;
+    addExpense: (expense: Omit<Expense, "id">) => void;
     editExpense: (expense: Expense) => void;
     removeExpense: (id: string) => void;
 }
@@ -55,8 +55,15 @@ const INITIAL_EXPENSES: Array<Expense> = [
 export const ExpensesProvider = ({ children }: ExpensesProviderProps) => {
     const [expenses, setExpenses] = useState(INITIAL_EXPENSES)
 
-    const addExpense = (expense: Expense) => {
-        setExpenses(oldState => [...oldState, expense])
+    const addExpense = (expense: Omit<Expense, "id">) => {
+        setExpenses(oldState => {
+            const newExpense: Expense = {
+                id: `e${Math.floor(Math.random() * 100) + 6}`,
+                ...expense
+            }
+
+            return [...oldState, newExpense]
+        })
     }
 
     const editExpense = (expense: Expense) => {

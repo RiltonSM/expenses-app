@@ -10,7 +10,7 @@ export default function ManageExpensesPage() {
     const { id } = useLocalSearchParams();
     const isEditing = id !== 'null';
     const { setOptions } = useNavigation()
-    const { removeExpense } = useContext(ExpensesContext)
+    const { removeExpense, addExpense, editExpense } = useContext(ExpensesContext)
 
     useLayoutEffect(() => {
         setOptions({
@@ -28,6 +28,20 @@ export default function ManageExpensesPage() {
     }
 
     const confirmHandler = () => {
+        if(isEditing){
+            editExpense({
+                id: id as string,
+                amount: 29.99,
+                date: new Date(),
+                description: "Test!!!!"
+            })
+        } else {
+            addExpense({
+                amount: 59.99,
+                date: new Date(),
+                description: "Test"
+            })
+        }
         router.back()
     }
 
