@@ -1,5 +1,5 @@
 export const getFormattedDate = (date: Date) => {
-    return `${date.getDate()}/${(date.getMonth() + 1).toLocaleString('pt-br', { minimumIntegerDigits: 2})}/${date.getFullYear()}`
+    return `${date.getDate().toLocaleString('pt-br', { minimumIntegerDigits: 2})}/${(date.getMonth() + 1).toLocaleString('pt-br', { minimumIntegerDigits: 2})}/${date.getFullYear()}`
 }
 
 export const getDateMinusDays = (date: Date, numberOfDays: number) => {

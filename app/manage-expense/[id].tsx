@@ -3,14 +3,16 @@ import { useContext, useLayoutEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { IconButton } from "../../components/UI/IconButton";
 import { GlobalStyle } from "../../constants/styles";
-import { Button } from "../../components/UI/Button";
 import { ExpensesContext } from "../../store/expenses-context";
+import { ExpenseForm } from "../../components/ManageExpense/ExpenseForm";
+import { LoadingOverlay } from "../../components/UI/LoadingOverlay";
+import { ErrorOverlay } from "../../components/UI/ErrorOverlay";
 
 export default function ManageExpensesPage() {
     const { id } = useLocalSearchParams();
     const isEditing = id !== 'null';
     const { setOptions } = useNavigation()
-    const { removeExpense, addExpense, editExpense } = useContext(ExpensesContext)
+    const { removeExpense, isLoading, error } = useContext(ExpensesContext)
 
     useLayoutEffect(() => {
         setOptions({
@@ -23,34 +25,18 @@ export default function ManageExpensesPage() {
         router.back()
     }
 
-    const cancelHandler = () => {
-        router.back()
+    if(isLoading){
+        return <LoadingOverlay/>
     }
 
-    const confirmHandler = () => {
-        if(isEditing){
-            editExpense({
-                id: id as string,
-                amount: 29.99,
-                date: new Date(),
-                description: "Test!!!!"
-            })
-        } else {
-            addExpense({
-                amount: 59.99,
-                date: new Date(),
-                description: "Test"
-            })
-        }
-        router.back()
+    if(error && !isLoading){
+        return <ErrorOverlay />
     }
 
     return (
         <View style={styles.container}>
-            <View style={styles.buttons}>
-                <Button style={styles.button} mode="flat" onPress={cancelHandler}>Cancel</Button>
-                <Button style={styles.button} onPress={confirmHandler} >{isEditing ? 'Update' : 'Add'}</Button>
-            </View>
+            <ExpenseForm id={id as string} isEditing={isEditing}/>
+            
             {isEditing && (
                 <View style={styles.deleteContainer}>
                     <IconButton 
@@ -71,15 +57,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 24,
         backgroundColor: GlobalStyle.colors.primary800
-    },
-    buttons: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    button: {
-        minWidth: 120,
-        marginHorizontal: 8
     },
     deleteContainer: {
         marginTop: 16,

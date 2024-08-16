@@ -13,6 +13,8 @@ export const ExpensesItem = ({ expense }: ExpensesItemProps) => {
         router.navigate(`/manage-expense/${expense.id}`)
     }
 
+    console.log('ExpensesItem', expense);
+
     return(
         <Pressable onPress={expensePressHandler} style={({ pressed }) => pressed && styles.pressed }>
             <View style={styles.expenseItem}>
